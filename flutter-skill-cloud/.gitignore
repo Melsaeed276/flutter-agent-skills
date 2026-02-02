@@ -1,0 +1,15 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Dart / Flutter tooling (in case examples evolve into runnable snippets)
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+build/
+
+# Logs
+*.log
+
