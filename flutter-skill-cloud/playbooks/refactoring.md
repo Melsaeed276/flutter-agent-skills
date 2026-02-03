@@ -1,24 +1,59 @@
-# Refactoring Playbook
+# Skill: Safe Refactoring Playbook
 
-## Goal
+## Purpose
+This playbook helps you refactor Flutter/Dart code safely: preserve behavior, avoid regressions, and keep changes reviewable.
 
-Improve structure without changing behavior.
+## When to use
+- You want to introduce a new architecture boundary (repositories, DI, feature modules).
+- You need to replace a state management approach or navigation structure.
+- You are paying down tech debt in a high-churn area.
 
-## When to read
+## When NOT to use
+- Emergency hotfix with minimal scope; use a targeted patch (but still add a regression test).
 
-- You’re about to reorganize folders, split widgets, or introduce a new architecture layer.
-- The team wants consistency across features.
+## Core concepts
+- **Behavior lock-in**: tests and snapshots of expected behavior before changing internals.
+- **Strangler pattern**: migrate incrementally behind an interface.
+- **Thin slices**: ship refactors in small, reviewable PRs.
 
-## Safe refactor steps
+## Recommended patterns
+- Start with a feature boundary and define an interface (e.g., repository).
+- Add tests around existing behavior *before* changing implementation.
+- Migrate one call site at a time; keep old + new paths temporarily.
+- Use feature flags only when necessary; remove them quickly.
+- Add a rollback plan: what would you revert if issues appear.
 
-- Define “done” first ([quality_bar/definition_of_done.md](../quality_bar/definition_of_done.md)).
-- Add tests around current behavior ([testing/SKILL.md](../testing/SKILL.md)).
-- Refactor in small, reviewable commits: rename → extract → redirect → delete.
-- Keep public APIs stable (routes, repositories, DTOs) until the end.
+## Minimal example
 
-## Common refactors
+A safe refactor sequence:
 
-- “God widget” → extract layout vs state vs side effects.
-- “Repository does too much” → split networking vs mapping vs caching.
-- “State explosion” → model states and transitions ([state/shared/state_modeling.md](../state/shared/state_modeling.md)).
+```text
+1) Identify boundary (e.g., "User profile fetch").
+2) Add tests around existing behavior.
+3) Introduce interface + adapter; keep current impl behind it.
+4) Move call sites to the interface.
+5) Replace impl (new data source / caching / error model).
+6) Delete old impl; rerun tests; verify perf.
+```
 
+## Edge cases
+- Large UI refactors: preserve keys and semantics to avoid losing state; see [flutter_core/keys.md](../flutter_core/keys.md).
+- Async refactors: avoid changing timing; add tests that assert ordering and cancellation.
+- Navigation changes: deep links and back stack behavior can regress silently.
+
+## Common mistakes
+- Refactoring without tests; reviewers cannot validate behavior.
+- Mixing refactor and new features; increases risk and review time.
+- Breaking public APIs used across packages.
+
+## Testing strategy
+- Add regression tests first.
+- For refactors involving routing, add an integration test that covers:
+  - deep link entry
+  - back navigation
+  - state restoration if applicable
+
+## Related skills
+- [Quality bar: Code review checklist](../quality_bar/code_review_checklist.md)
+- [Architecture: Feature structure](../architecture/feature_structure.md)
+- [Architecture: Repository pattern](../architecture/repository_pattern.md)

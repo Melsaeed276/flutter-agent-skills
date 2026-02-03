@@ -1,3 +1,8 @@
+---
+name: flutter-data
+description: Flutter data layer skill hub: networking (Dio/interceptors/pagination/token refresh), serialization/mappers, and local storage (Hive/SQLite/caching).
+---
+
 # Data Skills
 
 ## What this domain covers
@@ -30,4 +35,3 @@ Networking, serialization, and local storage. Emphasis on boundaries: DTOs, mapp
 - If you need **infinite scrolling**, go to [networking/pagination.md](./networking/pagination.md).
 - If you need **auth refresh**, go to [networking/token_refresh.md](./networking/token_refresh.md).
 - If you need **safe parsing + boundaries**, go to [serialization/mappers.md](./serialization/mappers.md).
-

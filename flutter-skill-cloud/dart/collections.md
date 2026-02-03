@@ -1,31 +1,83 @@
-# Collections & Immutability
+# Skill: Dart Collections and Immutability
 
-## Mental model
+## Purpose
+Most Flutter state bugs are data-shape bugs: lists mutate unexpectedly, maps are partially updated, or identity changes cause rebuild churn.
+This doc shows patterns for safe collection updates and immutable state.
 
-- Prefer immutable state: replace collections rather than mutating in place.
-- In Flutter, immutability often reduces rebuild bugs and makes tests simpler.
+## When to use
+- You manage state as lists/maps and updates are hard to reason about.
+- You see UI not updating (mutations without notifying) or updating too much.
+- You want safer APIs for models.
 
-## Patterns
+## When NOT to use
+- Do not use deep copies everywhere; copy only what changes.
+- Do not prematurely introduce heavy immutable libraries if simple patterns suffice.
 
-- Treat lists/maps as values in state objects.
-- Use `copyWith` on state to replace changed fields.
+## Core concepts
+- **Structural sharing**: copy only the changed parts.
+- **Unmodifiable views**: prevent accidental mutation.
+- **Equality/identity**: immutable models make equality meaningful.
 
-## Pitfalls
+## Recommended patterns
+- Store `List`/`Map` as `final` and expose unmodifiable copies.
+- Update collections with copy-on-write: `[...]`, `{...}`.
+- Prefer `const` where possible (compile-time immutability).
+- Avoid mutating a list in place if it is part of UI/state.
 
-- Mutating a list in-place can break equality and cache invalidation.
+## Minimal example
 
-## Example
+Immutable state with copy-on-write list updates:
 
 ```dart
-class CartState {
-  final List<String> items;
-  const CartState(this.items);
+class Todo {
+  final String id;
+  final String title;
+  final bool done;
 
-  CartState add(String item) => CartState([...items, item]);
+  const Todo({required this.id, required this.title, required this.done});
+
+  Todo copyWith({String? title, bool? done}) {
+    return Todo(
+      id: id,
+      title: title ?? this.title,
+      done: done ?? this.done,
+    );
+  }
+}
+
+class TodosState {
+  final List<Todo> todos;
+
+  const TodosState({required this.todos});
+
+  TodosState add(Todo todo) {
+    return TodosState(todos: [...todos, todo]);
+  }
+
+  TodosState toggle(String id) {
+    return TodosState(
+      todos: [
+        for (final t in todos)
+          if (t.id == id) t.copyWith(done: !t.done) else t,
+      ],
+    );
+  }
 }
 ```
 
-## See also
+## Edge cases
+- Sorting in place (`list.sort`) mutates; copy first: `final next = [...list]..sort(...)`.
+- Maps with nested objects require nested copy-on-write.
 
-- State modeling: ../state/shared/state_modeling.md
+## Common mistakes
+- Mutating a list inside state and expecting listeners to rebuild.
+- Returning internal mutable lists from models.
 
+## Testing strategy
+- Unit test collection transforms: add/toggle/remove.
+- Assert old state remains unchanged (immutability guarantee).
+
+## Related skills
+- [State modeling](../state/shared/state_modeling.md)
+- [Rebuild cost](../performance/rebuilds.md)
+- [Error handling](./error_handling.md)

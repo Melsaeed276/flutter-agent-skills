@@ -1,34 +1,74 @@
-# BuildContext
+# Skill: BuildContext (Scope, Timing, and Ownership)
 
-## Mental model
+## Purpose
+`BuildContext` is a handle to a location in the widget tree. Many Flutter issues come from using the wrong context (wrong scope) or using it at the wrong time (before the tree is ready or after disposal).
 
-- `BuildContext` is a handle to a location in the widget tree.
-- Many lookups (theme, localization, providers) search *up* the tree from that location.
+## When to use
+- You get errors like "Looking up a deactivated widget's ancestor".
+- Snackbars/dialogs/navigators/theme lookups fail or use the wrong ancestor.
+- You need to safely use context after `await`.
 
-## Patterns
+## When NOT to use
+- Do not store `BuildContext` long-term; store IDs, callbacks, or use state management.
+- Do not use context to access business logic that should be injected.
 
-- Use the closest context that has the dependencies you need.
-- Avoid using `context` after `await` unless you check `mounted`.
+## Core concepts
+- **Scope**: `Theme.of(context)` finds the nearest ancestor `Theme`.
+- **Timing**: some lookups require the first frame (`initState` vs `didChangeDependencies`).
+- **Mounted**: after disposal, context should not be used.
 
-## Pitfalls
+## Recommended patterns
+- Prefer `didChangeDependencies` for work that depends on inherited widgets.
+- Use `WidgetsBinding.instance.addPostFrameCallback` for one-time UI side effects.
+- After `await`, check `mounted` (or `context.mounted`) before using context.
+- Use `Builder` to create a context under a specific ancestor (e.g., `Scaffold`).
 
-- Calling `Navigator.of(context)` with a context below a nested navigator.
-- Reading inherited widgets during `initState` when not allowed.
+## Minimal example
 
-## Example (mounted check)
+Safe post-frame side effect:
 
 ```dart
-class MyState extends State<MyWidget> {
-  Future<void> load() async {
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Done')));
+import 'package:flutter/material.dart';
+
+class WelcomeBanner extends StatefulWidget {
+  const WelcomeBanner({super.key});
+
+  @override
+  State<WelcomeBanner> createState() => _WelcomeBannerState();
+}
+
+class _WelcomeBannerState extends State<WelcomeBanner> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Welcome!')),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox.shrink();
   }
 }
 ```
 
-## See also
+## Edge cases
+- Nested `Navigator`s: `Navigator.of(context)` may not be the one you expect.
+- Modals/overlays: the overlay context can differ from page context.
 
-- Lifecycle: widget_lifecycle.md
-- Navigation pitfalls: ../navigation/navigator_1/pitfalls.md
+## Common mistakes
+- Calling `showDialog` in `initState` directly.
+- Using context after navigation pops the route.
 
+## Testing strategy
+- Widget test: pump widget, trigger async, ensure no exceptions when disposed.
+- Widget test: ensure snackbars/dialogs appear under the right scaffold.
+
+## Related skills
+- [Widget lifecycle](./widget_lifecycle.md)
+- [Navigation pitfalls](../navigation/navigator_1/pitfalls.md)
+- [State async patterns](../state/shared/async_state.md)

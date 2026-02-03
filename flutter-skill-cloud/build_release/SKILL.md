@@ -1,3 +1,8 @@
+---
+name: flutter-build-release
+description: Flutter build and release skill hub: flavors/environments, signing, CI/CD, versioning, and App Store / Play Store release considerations.
+---
+
 # Build & Release Skills
 
 ## What this domain covers
@@ -22,4 +27,3 @@ Flavors, signing, CI/CD concepts, versioning, and store release considerations.
 
 - If you need **multiple environments**, go to [flavors.md](./flavors.md).
 - If you need **reproducible releases**, go to [signing.md](./signing.md) and [versioning.md](./versioning.md).
-

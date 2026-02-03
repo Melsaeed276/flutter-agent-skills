@@ -1,3 +1,8 @@
+---
+name: flutter-performance
+description: Flutter performance skill hub: profiling jank, reducing rebuilds, using DevTools, memory/images, and isolates for off-main-thread work.
+---
+
 # Performance Skills
 
 ## What this domain covers
@@ -24,4 +29,3 @@ Finding and fixing jank, reducing rebuilds, using DevTools effectively, managing
 - If you need **why frames drop**, go to [jank.md](./jank.md) then [devtools.md](./devtools.md).
 - If you need **to reduce rebuild cost**, go to [rebuilds.md](./rebuilds.md).
 - If you need **to handle big images**, go to [images.md](./images.md).
-

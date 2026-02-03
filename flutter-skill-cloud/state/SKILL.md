@@ -1,39 +1,61 @@
-# State Skills
+---
+name: flutter-state
+description: Flutter state management skill hub: async/loading/error models, caching/invalidation, and patterns for Riverpod and BLoC (including testing).
+---
 
-## What this domain covers
+# Skill: State Management (Shared, Riverpod, BLoC)
 
-How to model and manage state in Flutter apps: shared principles, async state, caching, testing, plus patterns for Riverpod and BLoC.
+## Purpose
+This hub routes state management topics: how to model state, handle async/loading/error, implement caching/invalidation, and choose patterns for Riverpod or BLoC.
 
-## When to read it
-
-- Your UI has inconsistent loading/error behavior.
+## When to use
+- UI has inconsistent loading/error behavior.
 - Business rules leak into widgets.
 - Multiple features need shared caching or invalidation.
+- You are deciding between Riverpod/BLoC or improving an existing setup.
 
-## Subtopics
+## When NOT to use
+- If the issue is pure Dart logic, start with [dart/SKILL.md](../dart/SKILL.md).
+- If the issue is networking/storage boundaries, start with [data/SKILL.md](../data/SKILL.md).
 
-- Shared fundamentals:
-  - [shared/state_modeling.md](./shared/state_modeling.md)
-  - [shared/async_state.md](./shared/async_state.md)
-  - [shared/caching_state.md](./shared/caching_state.md)
-  - [shared/testing_state.md](./shared/testing_state.md)
-- Riverpod:
-  - [riverpod/overview.md](./riverpod/overview.md)
-  - [riverpod/providers.md](./riverpod/providers.md)
-  - [riverpod/notifiers.md](./riverpod/notifiers.md)
-  - [riverpod/async_patterns.md](./riverpod/async_patterns.md)
-  - [riverpod/architecture.md](./riverpod/architecture.md)
-  - [riverpod/testing.md](./riverpod/testing.md)
-- BLoC:
-  - [bloc/overview.md](./bloc/overview.md)
-  - [bloc/events_states.md](./bloc/events_states.md)
-  - [bloc/side_effects.md](./bloc/side_effects.md)
-  - [bloc/testing.md](./bloc/testing.md)
+## Core concepts
+- **Single source of truth**: one owner for state.
+- **Immutable state**: predictable transitions.
+- **Events vs commands**: choose a model that matches your domain.
+- **Async state**: represent loading, data, error, and retry explicitly.
 
-## Decision guide
+## Recommended patterns
+- Keep UI state near UI, domain state near domain.
+- Use typed failures and explicit retry paths.
+- Cache with explicit invalidation rules; avoid hidden global caches.
 
-- If you need **a consistent loading/error model**, go to [shared/async_state.md](./shared/async_state.md).
-- If you need **caching and invalidation**, go to [shared/caching_state.md](./shared/caching_state.md).
-- If you need **provider primitives and composition**, go to [riverpod/providers.md](./riverpod/providers.md).
-- If you need **event-driven flows**, go to [bloc/events_states.md](./bloc/events_states.md).
+## Minimal example
 
+Where to go next:
+
+```text
+- Modeling state -> shared/state_modeling.md
+- Loading/error/retry -> shared/async_state.md
+- Caching/invalidation -> shared/caching_state.md
+- Testing state -> shared/testing_state.md
+- Riverpod patterns -> riverpod/*
+- BLoC patterns -> bloc/*
+```
+
+## Edge cases
+- Async flows that outlive the screen must be cancelled or ignored.
+- Multiple listeners can trigger duplicate loads; coordinate.
+
+## Common mistakes
+- Mixing domain logic into widget trees.
+- Modeling errors as strings instead of typed failures.
+
+## Testing strategy
+- Unit tests for state transitions.
+- Widget tests for wiring.
+- Integration tests for critical flows.
+
+## Related skills
+- [Error modeling](../architecture/error_modeling.md)
+- [Repository pattern](../architecture/repository_pattern.md)
+- [Testing hub](../testing/SKILL.md)

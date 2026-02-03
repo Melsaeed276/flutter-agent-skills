@@ -1,16 +1,50 @@
-# Performance Checklist
+# Skill: Performance Checklist (Flutter)
 
-## Checklist
+## Purpose
+A checklist to prevent common performance regressions: jank, excessive rebuilds, memory churn, and large images.
 
-- [ ] Rebuild scope is minimal (state near consumers; `const` where possible).
-- [ ] Lists are virtualized and item widgets are cheap.
-- [ ] Images are sized/decoded appropriately ([../performance/images.md](../performance/images.md)).
-- [ ] Expensive work is moved off the UI thread when needed ([../dart/isolates.md](../dart/isolates.md)).
-- [ ] Animations avoid layout thrash and overdraw.
-- [ ] Verified on low-end device class and large-screen class.
+## When to use
+- Before release.
+- When touching list/grid screens, animations, or image-heavy flows.
+- When you see frame drops or high memory usage.
 
-## See also
+## When NOT to use
+- Do not over-optimize early. Use it when a screen is user-critical or already slow.
 
-- [../performance/SKILL.md](../performance/SKILL.md)
-- [../performance/jank.md](../performance/jank.md)
+## Core concepts
+- **Frame budget**: UI thread work must fit into a frame.
+- **Rebuild cost**: rebuilds are normal; *unnecessary* rebuilds are expensive.
+- **Memory pressure**: large images and caches can crash low-end devices.
 
+## Recommended patterns
+- Profile first; optimize the proven bottleneck.
+- Avoid heavy work in `build` (parsing, sorting, JSON decoding).
+- Use `const` widgets and stable keys where helpful.
+- Optimize images: sizes, caching, decode.
+
+## Minimal example
+
+```text
+[ ] Profile in profile mode for the target device class.
+[ ] No expensive work in build/layout.
+[ ] Lists use lazy builders; items are cheap to build.
+[ ] Images are sized/decoded appropriately.
+[ ] No memory leaks (controllers, subscriptions disposed).
+```
+
+## Edge cases
+- Release mode can behave differently; verify a perf-sensitive screen in release.
+- Foldables and tablets can show more content; list item complexity matters.
+
+## Common mistakes
+- Blindly adding `RepaintBoundary` without measuring.
+- Using `GlobalKey` widely (can increase work).
+
+## Testing strategy
+- Add performance smoke tests where feasible.
+- Add golden tests for layout stability across sizes.
+
+## Related skills
+- [Jank](../performance/jank.md)
+- [Rebuilds](../performance/rebuilds.md)
+- [Images](../performance/images.md)

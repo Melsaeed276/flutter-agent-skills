@@ -1,50 +1,66 @@
 # META (Global Conventions)
 
-This file defines the rules for authoring and evolving this repository.
+This file defines the repository-wide rules for authoring, portability, and maintenance.
 
-## Markdown style rules
+## Purpose
 
-- Use `#` for title, `##` for main sections, `###` for subsections.
-- Prefer short paragraphs and bullet lists; keep scanning easy.
-- Use fenced code blocks with language tags (`dart`, `yaml`, `json`, `text`).
-- Avoid screenshots unless the text can’t reasonably explain it.
+This repo is a "skills" library: small, focused Markdown pages that teach a single topic well.
+The goal is fast retrieval and reliable application in real Flutter/Dart projects.
 
-## Naming conventions
+## When to use
 
-- Hubs are named `SKILL.md` and live at a domain root (for example `ui/SKILL.md`).
-- Topic files are lowercase with underscores: `layout_constraints.md`.
-- Keep file names stable once linked from other docs.
+- You want consistent docs that work for both editor agents and cloud agents.
+- You want patterns + minimal examples + pitfalls + tests in one place.
 
-## Code snippet conventions
+## When NOT to use
 
-- Snippets should be minimal and runnable-in-spirit (even if not a full app).
-- Prefer `// ...` to omit irrelevant parts.
-- Show both “do” and “avoid” only when it clarifies a common pitfall.
+- Do not store private/internal knowledge here (tokens, endpoints, customer data).
+- Do not use this as a full tutorial series; keep docs small and link out.
 
-## Error-handling philosophy (for examples)
+## Core concepts
 
-- Model errors as data (typed failures) where it improves UX and testing.
-- Prefer predictable behavior over “try/catch everywhere”.
-- Surface user-facing errors with actionable messages; log diagnostic context separately.
+- **Single-topic pages**: each doc should answer one kind of question.
+- **Progressive disclosure**: hubs route to leaf docs; leaf docs include links to adjacent topics.
+- **Portability**: no UI instructions tied to a specific tool.
 
-## Keeping files small
+## Recommended patterns
 
-- Target: under ~200 lines per file.
-- Split when a file starts mixing multiple concerns (for example “responsive” vs “foldables”).
-- Prefer linking to a dedicated subtopic rather than expanding a hub.
+- Use headings consistently (see [templates/SKILL_TEMPLATE.md](./templates/SKILL_TEMPLATE.md)).
+- Prefer short paragraphs and compact bullet lists.
+- Use fenced code blocks with language tags: `dart`, `yaml`, `json`, `text`.
+- Examples should be "runnable-in-spirit": compile with small adjustments.
 
-## No secrets rule
+## Minimal example
 
-Never include:
+A good doc pattern:
 
-- API tokens/keys, credentials, private endpoints, internal hostnames.
-- Real customer data or identifiers.
+```text
+- Define the mental model.
+- Show a minimal snippet.
+- List common mistakes.
+- Show a testing approach.
+```
 
-If you need placeholders, use obvious fakes like `https://example.com` and `YOUR_API_KEY_HERE`.
+## Edge cases
 
-## Portability rules
+- If an API is unstable or version-sensitive, describe how to verify it.
+- If behavior differs by platform (iOS vs Android vs web), call it out.
 
-- Do not reference specific editors, UI buttons, or proprietary agent features.
-- Assume only a Git repo + Markdown reader.
-- Prefer general steps (“run tests”, “check logs”) over tool-specific commands.
+## Common mistakes
 
+- Copying large blocks from official docs.
+- Adding long, unstructured notes instead of a reusable pattern.
+- Using non-portable file paths or editor steps.
+
+## Testing strategy
+
+- Mention the *lowest-cost* test that provides confidence:
+  - Pure logic -> unit tests.
+  - UI wiring -> widget tests.
+  - Cross-screen flows -> integration tests.
+- Prefer deterministic tests: fake clocks, fake repositories, stable keys.
+
+## Related skills
+
+- Router: [SKILL_INDEX.md](./SKILL_INDEX.md)
+- Templates: [templates/SKILL_TEMPLATE.md](./templates/SKILL_TEMPLATE.md)

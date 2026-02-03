@@ -1,0 +1,9 @@
+# Universal Agent Rules (Flutter Skills)
+
+Use this repo as a portable knowledge base for Flutter/Dart work.
+
+Start at `flutter-skill-cloud/SKILL_INDEX.md`, then open the relevant domain hub
+`flutter-skill-cloud/<domain>/SKILL.md`, then only the topic pages linked there.
+
+Stay portable (no editor UI instructions). Keep changes minimal and testable. No secrets.
+

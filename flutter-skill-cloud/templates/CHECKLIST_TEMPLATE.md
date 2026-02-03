@@ -1,16 +1,40 @@
-# <Checklist Title>
+# Checklist: <name>
 
-## Scope
+## Purpose
+What this checklist verifies and why it matters.
 
-What this checklist applies to and what it does not.
+## When to use
+- Before merging
+- Before releasing
 
-## Checklist
+## When NOT to use
+- If the change is trivial and does not affect behavior (still run basic checks)
 
-- [ ] Item 1
-- [ ] Item 2
-- [ ] Item 3
+## Core concepts
+- **Scope**: what is in/out
+- **Signals**: what evidence you collect
 
-## Notes
+## Recommended patterns
+- Prefer a short checklist with strong signals.
+- Prefer objective checks over opinions.
 
-Constraints, gotchas, and links to deeper docs.
+## Minimal example
 
+```text
+[ ] Item written as a verifiable statement.
+[ ] Includes a link to evidence (test, screenshot, log) when applicable.
+```
+
+## Edge cases
+- Large refactors: run the checklist per subsystem.
+- Hotfixes: be explicit about what you are skipping and why.
+
+## Common mistakes
+- Writing items that are not verifiable.
+- Skipping evidence (no tests, no repro).
+
+## Testing strategy
+- Add the minimal regression test for the bug that motivated the change.
+
+## Related skills
+- [Quality bar](../quality_bar/definition_of_done.md)

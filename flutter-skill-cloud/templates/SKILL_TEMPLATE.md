@@ -1,40 +1,42 @@
-# <Topic Title>
+# Skill: <topic name>
 
 ## Purpose
+Explain why this topic exists and what problem it solves.
 
-What problem this document helps solve and what “good” looks like.
+## When to use
+- Trigger 1
+- Trigger 2
 
-## When to read
+## When NOT to use
+- Anti-use case (and what to do instead)
 
-- You’re seeing <symptom>.
-- You’re about to implement <feature>.
-- You want to avoid <common pitfall>.
+## Core concepts
+- **Term**: short definition
+- **Term**: short definition
 
-## Mental model
+## Recommended patterns
+- Pattern 1 (one sentence)
+- Pattern 2 (one sentence)
 
-Explain the core idea in 3–6 bullets.
-
-## Patterns
-
-- Pattern A: when to use it, tradeoffs.
-- Pattern B: when to avoid it.
-
-## Pitfalls
-
-- Pitfall: why it happens, how to spot it, how to fix it.
-
-## Example
+## Minimal example
 
 ```dart
-// Keep examples small and focused.
+// Minimal example. Keep it small and "runnable-in-spirit".
+// Avoid secrets, credentials, and tool-specific steps.
 ```
 
-## Tests & checks
+## Edge cases
+- Edge case 1 + how to handle
+- Edge case 2 + how to handle
 
-- What should be covered by unit/widget/integration tests?
-- What metrics or signals confirm success?
+## Common mistakes
+- Mistake 1 -> fix
+- Mistake 2 -> fix
 
-## See also
+## Testing strategy
+- Unit: what to test and how
+- Widget: what to test and how
+- Integration: what to test and how
 
-- Related topic: `../path/to/doc.md`
-
+## Related skills
+- [Some related topic](./relative_link.md)

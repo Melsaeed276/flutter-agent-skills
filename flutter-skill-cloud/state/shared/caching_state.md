@@ -1,21 +1,58 @@
-# Caching State
+# Skill: Caching and Invalidation (State-Level)
 
-## Mental model
+## Purpose
+Caching reduces latency and load, but it introduces complexity: staleness, invalidation, and consistency.
+This doc provides patterns for modeling cache behavior in state so it stays explicit and testable.
 
-Caches exist to trade freshness for speed, reliability, and cost. Make that trade explicit.
+## When to use
+- You want instant UI with background refresh.
+- You have paginated lists or offline-friendly screens.
+- Multiple screens share the same data.
 
-## Patterns
+## When NOT to use
+- Do not cache everything by default; caches are a liability.
+- Do not hide caching in UI widgets; centralize it in data/state layers.
 
-- Cache at the repository boundary.
-- Store metadata: `fetchedAt`, `staleAfter`, and source (`network` vs `cache`).
-- Implement invalidation rules (time-based, manual, or event-based).
+## Core concepts
+- **Freshness**: when cached data is acceptable.
+- **Invalidation**: what events make cache stale (logout, mutation, TTL).
+- **Consistency**: optimistic vs server-authoritative.
 
-## Pitfalls
+## Recommended patterns
+- Choose a strategy: cache-aside or stale-while-revalidate.
+- Track timestamps and invalidation reasons.
+- Invalidate on writes (mutations) and auth changes.
+- Keep cache keying explicit (user ID, filters, locale).
 
-- Hidden caches that make debugging impossible.
-- Stale UI because refresh and invalidation aren’t modeled.
+## Minimal example
 
-## See also
+A tiny cache metadata wrapper:
 
-- Caching strategies: ../../data/local_storage/caching_strategies.md
+```dart
+class Cached<T> {
+  final T value;
+  final DateTime fetchedAt;
 
+  const Cached({required this.value, required this.fetchedAt});
+
+  bool isStale(Duration ttl, DateTime now) => now.difference(fetchedAt) > ttl;
+}
+```
+
+## Edge cases
+- Per-user caches: never leak data across users.
+- Filtered lists: cache key must include filters/sort.
+- Offline: decide if you show stale data with a banner.
+
+## Common mistakes
+- Using a global singleton cache without invalidation.
+- Forgetting to invalidate after mutations.
+
+## Testing strategy
+- Unit test TTL expiration and invalidation triggers.
+- Integration test: mutation updates list + details screens consistently.
+
+## Related skills
+- [Caching strategies (data layer)](../../data/local_storage/caching_strategies.md)
+- [Repository pattern](../../architecture/repository_pattern.md)
+- [Token refresh](../../data/networking/token_refresh.md)

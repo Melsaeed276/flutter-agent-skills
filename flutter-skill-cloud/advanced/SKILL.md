@@ -1,3 +1,8 @@
+---
+name: flutter-advanced
+description: Advanced Flutter/Dart skill hub: code generation, FFI/native interop, render objects, modular SDKs, web/desktop constraints, and white-label architecture.
+---
+
 # Advanced Skills
 
 ## What this domain covers
@@ -23,4 +28,3 @@ Deeper Flutter/Dart topics that appear in complex apps: code generation, FFI, re
 - If you need **performance beyond widgets**, go to [render_objects.md](./render_objects.md).
 - If you need **native interop**, go to [ffi.md](./ffi.md).
 - If you need **multi-brand architecture**, go to [white_label.md](./white_label.md).
-

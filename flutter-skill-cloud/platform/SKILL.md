@@ -1,3 +1,8 @@
+---
+name: flutter-platform
+description: Flutter platform integrations skill hub: permissions, camera/files, push notifications, background tasks, platform channels, app lifecycle, and foldables considerations.
+---
+
 # Platform Skills
 
 ## What this domain covers
@@ -25,4 +30,3 @@ Platform integrations and constraints: permissions, camera/files, push notificat
 - If you need **lifecycle correctness**, go to [app_lifecycle.md](./app_lifecycle.md).
 - If you need **native bridging**, go to [platform_channels.md](./platform_channels.md).
 - If you need **foldable posture constraints**, go to [foldables.md](./foldables.md) (and then [../ui/foldables.md](../ui/foldables.md)).
-

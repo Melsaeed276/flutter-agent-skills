@@ -1,27 +1,59 @@
-# Flutter Core Skills
+---
+name: flutter-core
+description: Flutter core mechanics skill hub: BuildContext, widget lifecycle, rendering pipeline, keys, layout constraints, and theming foundations.
+---
 
-## What this domain covers
+# Skill: Flutter Core Mechanics
 
-How Flutter builds, lays out, paints, and updates widgets: `BuildContext`, widget lifecycle, rendering, keys, constraints, and theming foundations.
+## Purpose
+This hub covers how Flutter actually works: `BuildContext`, widget lifecycle, rendering, keys, layout constraints, and theming.
+Understanding these fundamentals prevents many "mystery" bugs in UI, performance, and navigation.
 
-## When to read it
+## When to use
+- You see layout overflows, "unbounded constraints", or unpredictable sizes.
+- You are confused about why `context` "doesn't work here".
+- Lists, animations, or forms lose state unexpectedly.
 
-- You’re seeing layout overflows, “unbounded constraints”, or unpredictable sizes.
-- You’re confused about why `context` “doesn’t work here”.
-- You need stable element identity (lists, animations, forms).
+## When NOT to use
+- If your issue is purely data/state architecture, start at [state/SKILL.md](../state/SKILL.md).
+- If your issue is platform APIs (permissions, notifications), start at [platform/SKILL.md](../platform/SKILL.md).
 
-## Subtopics
+## Core concepts
+- **Widget vs Element vs RenderObject**: configuration vs instance vs layout/paint.
+- **Constraints**: parents constrain children; children choose size within constraints.
+- **Identity**: keys control how elements match widgets across rebuilds.
 
-- `BuildContext`: [build_context.md](./build_context.md)
-- Widget lifecycle: [widget_lifecycle.md](./widget_lifecycle.md)
-- Rendering pipeline: [rendering_pipeline.md](./rendering_pipeline.md)
-- Keys: [keys.md](./keys.md)
-- Layout constraints: [layout_constraints.md](./layout_constraints.md)
-- Theming foundations: [theming_foundations.md](./theming_foundations.md)
+## Recommended patterns
+- Learn the layout rules before adding "fix" widgets.
+- Use keys intentionally, mostly `ValueKey`.
+- Keep heavy work out of `build`.
+- Use `ThemeExtensions` and tokens to avoid scattered styling.
 
-## Decision guide
+## Minimal example
 
-- If you need **to understand sizes and overflows**, go to [layout_constraints.md](./layout_constraints.md).
-- If you need **stable widget identity**, go to [keys.md](./keys.md).
-- If you need **why a rebuild happened**, go to [widget_lifecycle.md](./widget_lifecycle.md).
+Routing to the right doc:
 
+```text
+- Context timing/scoping -> build_context.md
+- Lifecycle/cancellation/dispose -> widget_lifecycle.md
+- Layout overflows/unbounded -> layout_constraints.md
+- List identity/state loss -> keys.md
+- Performance pipeline -> rendering_pipeline.md
+- Global theming -> theming_foundations.md
+```
+
+## Edge cases
+- Nested navigators and overlays can change which context you need.
+- Keys can fix state issues but also create new ones if misused.
+
+## Common mistakes
+- Calling `showDialog` in `initState` without a post-frame callback.
+- Using `Expanded` inside unbounded parents (e.g., `Column` in `SingleChildScrollView`).
+
+## Testing strategy
+- Use widget tests to lock in layout behavior and lifecycle interactions.
+
+## Related skills
+- [UI: Responsive layouts](../ui/responsive.md)
+- [Performance: Rebuilds](../performance/rebuilds.md)
+- [Navigation: Testing](../navigation/go_router/testing.md)

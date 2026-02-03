@@ -1,32 +1,59 @@
-# Isolates
+# Skill: Dart Isolates (Off-Main-Thread Work)
 
-## Mental model
+## Purpose
+Flutter UI runs on a single thread. CPU-heavy work (parsing large JSON, image processing, sorting big lists) can cause jank.
+Isolates provide concurrency via message passing and are the primary tool for keeping the UI thread responsive.
 
-- The UI runs on the main isolate; heavy CPU work causes jank.
-- Isolates don’t share memory; communicate by messages.
+## When to use
+- Frame drops happen during parsing/processing.
+- Work is CPU-bound (not I/O bound).
+- You need to run expensive transforms without blocking the UI.
 
-## Patterns
+## When NOT to use
+- Do not use isolates for network I/O; async I/O does not block the UI thread.
+- Do not spawn isolates for tiny work; overhead can dominate.
 
-- Use `compute` for simple pure functions and moderate payloads.
-- For long-lived work, create a dedicated isolate and reuse it.
+## Core concepts
+- **No shared memory**: isolate communication uses message passing.
+- **Transferable data**: messages should be simple/serializable.
+- **Granularity**: batch work to amortize overhead.
 
-## Pitfalls
+## Recommended patterns
+- For one-off CPU work, use `Isolate.run` (Dart) or `compute` (Flutter).
+- Keep isolate entrypoints top-level/static.
+- Avoid capturing large object graphs.
+- Measure: move only the bottleneck.
 
-- Passing huge objects is expensive; serialize minimal data.
-- Many small isolate spawns can be worse than a single optimized algorithm.
+## Minimal example
 
-## Example (compute)
+Using `Isolate.run` for a CPU-heavy transform:
 
 ```dart
-import 'package:flutter/foundation.dart';
+import 'dart:isolate';
 
-int expensiveSum(List<int> values) => values.fold(0, (a, b) => a + b);
-
-Future<int> sumOffThread(List<int> values) => compute(expensiveSum, values);
+Future<List<int>> sortBigList(List<int> values) {
+  // Copy before sending if the caller might mutate.
+  final input = List<int>.from(values);
+  return Isolate.run(() {
+    input.sort();
+    return input;
+  });
+}
 ```
 
-## See also
+## Edge cases
+- Some objects are not sendable across isolates.
+- If you need streaming results, you may need a long-lived isolate and ports.
 
-- Performance jank: ../performance/jank.md
-- Flutter rendering: ../flutter_core/rendering_pipeline.md
+## Common mistakes
+- Spawning isolates for small work in tight loops.
+- Sending large, deeply nested objects and paying serialization cost.
 
+## Testing strategy
+- Unit test correctness of the transform.
+- Add a performance smoke test for large inputs (time bound).
+
+## Related skills
+- [Performance: Jank](../performance/jank.md)
+- [Performance: Isolates](../performance/isolates.md)
+- [Async fundamentals](./async.md)

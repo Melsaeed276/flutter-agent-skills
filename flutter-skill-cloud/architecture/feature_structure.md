@@ -1,19 +1,58 @@
-# Feature Structure
+# Skill: Feature Structure (Feature-First Organization)
 
-## Goal
+## Purpose
+A consistent folder structure reduces cognitive load and makes ownership clear. Feature-first organization scales better than purely technical layering (all widgets in one folder).
 
-Make features easy to find, test, and modify without cross-feature coupling.
+## When to use
+- Features are inconsistent and hard to navigate.
+- You want to modularize or extract packages.
+- Multiple teams work in the same codebase.
 
-## Pattern (typical)
+## When NOT to use
+- Do not split into packages too early; start with folders and clear boundaries.
 
-- `feature/`:
-  - `ui/` widgets and screens
-  - `state/` controllers/notifiers/blocs
-  - `domain/` use-cases, policies
-  - `data/` repositories, mappers, local/remote sources
+## Core concepts
+- **Feature-first**: group UI/state/domain/data per feature.
+- **Shared core**: cross-cutting utilities live in a small `core/`.
+- **Public API**: each feature exposes a limited surface.
 
-## Pitfalls
+## Recommended patterns
+- Prefer `features/<name>/` with clear subfolders.
+- Keep feature UI private unless reused.
+- Avoid deep nesting; keep paths short.
 
-- “shared” folder that becomes a dumping ground.
-- Circular imports between features.
+## Minimal example
 
+Suggested structure:
+
+```text
+lib/
+  core/
+    routing/
+    theme/
+    errors/
+  features/
+    auth/
+      data/
+      domain/
+      state/
+      ui/
+    profile/
+      ...
+```
+
+## Edge cases
+- Cross-feature shared UI: extract a small `shared_ui/` or a package.
+- Platform code: isolate it behind an interface.
+
+## Common mistakes
+- Creating a huge `utils/` folder (junk drawer).
+- Sharing state across features via globals.
+
+## Testing strategy
+- Mirror structure in tests: `test/features/profile/...`.
+
+## Related skills
+- [Clean architecture](./clean_architecture.md)
+- [Dependency injection](./dependency_injection.md)
+- [Repository pattern](./repository_pattern.md)

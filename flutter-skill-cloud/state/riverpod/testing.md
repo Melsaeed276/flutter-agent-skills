@@ -1,16 +1,51 @@
-# Testing Riverpod
+# Skill: Testing Riverpod (ProviderContainer, Overrides)
 
-## Patterns
+## Purpose
+Riverpod is test-friendly when you structure dependencies as providers and use overrides.
+This doc provides patterns for unit and widget tests.
 
-- Override providers in tests to inject fakes.
-- Test notifier behavior without widgets when possible.
+## When to use
+- You want to test notifiers/providers without widgets.
+- You need to inject fakes in tests.
 
-## Pitfalls
+## When NOT to use
+- Do not write widget tests to validate pure provider logic.
 
-- Widget tests that do too much when unit tests would be clearer.
+## Core concepts
+- **ProviderContainer**: runs providers without Flutter.
+- **Overrides**: replace providers with fakes.
+- **Listeners**: observe state changes.
 
-## See also
+## Recommended patterns
+- Use `ProviderContainer` for unit tests.
+- Use overrides for repositories/clients.
+- Keep notifiers small and deterministic.
 
-- Testing state: ../shared/testing_state.md
-- Widget tests: ../../testing/widget_tests.md
+## Minimal example
 
+Unit test shape (pseudo):
+
+```dart
+// In a test file:
+// final container = ProviderContainer(overrides: [repoProvider.overrideWithValue(FakeRepo())]);
+// addTearDown(container.dispose);
+// final notifier = container.read(controllerProvider.notifier);
+// await notifier.load();
+// expect(container.read(controllerProvider), isA<Loaded>());
+```
+
+## Edge cases
+- AutoDispose providers may dispose in tests; keep them alive or read them appropriately.
+
+## Common mistakes
+- Over-mocking and asserting internal calls.
+- Forgetting to dispose the container.
+
+## Testing strategy
+- Unit tests for provider logic.
+- Widget tests for provider -> UI rendering.
+
+## Related skills
+- [Unit tests](../../testing/unit_tests.md)
+- [Widget tests](../../testing/widget_tests.md)
+- [Shared testing state](../shared/testing_state.md)

@@ -1,3 +1,8 @@
+---
+name: flutter-ui
+description: Flutter UI skill hub for responsive/adaptive layouts (phones/tablets/desktop/web), Material 3/Cupertino, foldables, accessibility, animations, and design systems.
+---
+
 # UI Skills
 
 ## What this domain covers
@@ -30,4 +35,3 @@ Flutter UI building blocks: Material 3, Cupertino, responsiveness, breakpoints, 
 - If you need **a consistent sizing strategy**, go to [breakpoints.md](./breakpoints.md).
 - If you need **navigation rail vs bottom nav vs master-detail**, go to [adaptive_layouts.md](./adaptive_layouts.md).
 - If you need **foldable posture and two-pane layouts**, go to [foldables.md](./foldables.md) (and [../platform/foldables.md](../platform/foldables.md)).
-

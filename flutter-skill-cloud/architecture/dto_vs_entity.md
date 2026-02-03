@@ -1,16 +1,64 @@
-# DTO vs Entity
+# Skill: DTO vs Entity (Keep Boundaries Clean)
 
-## Mental model
+## Purpose
+DTOs represent external data shapes (JSON, DB rows). Entities represent domain concepts.
+Mixing them couples UI and business logic to API details and makes refactors hard.
 
-- DTOs match transport/storage shapes (JSON, SQLite rows).
-- Entities (domain models) match app concepts and invariants.
+## When to use
+- You integrate an API or database.
+- You see UI code depending on JSON field names.
+- You want stable domain logic despite API changes.
 
-## Patterns
+## When NOT to use
+- Do not over-model; simple apps can map minimally.
 
-- Keep DTOs in data layer; convert to entities early.
-- Entities should be easy to use in UI/state without null checks everywhere.
+## Core concepts
+- **DTO**: often nullable, optional, versioned.
+- **Entity**: business meaning, invariants, typically non-null.
+- **Mapper**: boundary conversion.
 
-## Pitfalls
+## Recommended patterns
+- Parse into DTOs at the boundary.
+- Map once: DTO -> entity.
+- Keep entities stable and validated.
 
-- Reusing DTOs in UI causes brittle coupling to backend changes.
+## Minimal example
 
+DTO to entity mapping:
+
+```dart
+class UserDto {
+  final String? id;
+  final String? email;
+  const UserDto({required this.id, required this.email});
+}
+
+class User {
+  final String id;
+  final String email;
+  const User({required this.id, required this.email});
+}
+
+User toEntity(UserDto dto) {
+  return User(
+    id: dto.id ?? 'unknown',
+    email: dto.email ?? '',
+  );
+}
+```
+
+## Edge cases
+- Backward compatibility: old APIs may omit fields.
+- Localization/time zones: normalize at the boundary.
+
+## Common mistakes
+- Passing DTOs to widgets.
+- Letting entities have optional fields everywhere.
+
+## Testing strategy
+- Unit test mapping with missing/invalid inputs.
+
+## Related skills
+- [JSON parsing](../data/serialization/json_parsing.md)
+- [Mappers](../data/serialization/mappers.md)
+- [Null safety](../dart/null_safety.md)

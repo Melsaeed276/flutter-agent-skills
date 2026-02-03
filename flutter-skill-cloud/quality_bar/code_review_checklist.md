@@ -1,17 +1,52 @@
-# Code Review Checklist
+# Skill: Code Review Checklist (Flutter/Dart)
 
-## Checklist
+## Purpose
+A reviewer-focused checklist to catch correctness, API design, maintainability, and test gaps.
 
-- [ ] State is explicit (loading/success/empty/error) and tested.
-- [ ] UI respects constraints; no hard-coded magic sizes without rationale.
-- [ ] Navigation is declarative and parameters are typed/validated.
-- [ ] Error handling surfaces actionable messages and preserves diagnostics.
-- [ ] Performance: no unnecessary rebuilds; list rendering is efficient.
-- [ ] Accessibility: semantics labels where needed; keyboard focus where relevant.
-- [ ] Docs: new docs linked from the closest `SKILL.md` hub.
+## When to use
+- Reviewing a PR.
+- Self-review before requesting review.
 
-## See also
+## When NOT to use
+- Do not use it as a blocking bureaucracy for trivial changes; scale the depth with risk.
 
-- [../quality_bar/performance_checklist.md](../quality_bar/performance_checklist.md)
-- [../testing/SKILL.md](../testing/SKILL.md)
+## Core concepts
+- **Risk-based review**: focus on correctness and regressions first.
+- **Boundaries**: keep UI/state/domain/data separations clear.
+- **Tests as evidence**: prefer tests over comments.
 
+## Recommended patterns
+- Validate correctness on edge cases (nulls, empty lists, slow network, offline).
+- Check API ergonomics: names, types, nullability, error contracts.
+- Look for lifecycle hazards: async after dispose, context misuse.
+- Ensure state is observable and deterministic.
+
+## Minimal example
+
+```text
+[ ] Does the change have a clear purpose and minimal diff?
+[ ] Are loading/error/empty states handled?
+[ ] Is error modeling consistent (typed failures, actionable messages)?
+[ ] Any async lifecycle risks (mounted checks, cancellation)?
+[ ] Tests added/updated; do they fail before the fix?
+[ ] No unnecessary rebuilds or heavy work on the UI thread.
+```
+
+## Edge cases
+- Navigation changes: check deep links, back stack, and nested routes.
+- Data layer changes: check pagination, caching, token refresh race conditions.
+
+## Common mistakes
+- Over-mocking in tests (tests become coupled to implementation).
+- Putting business logic in widgets.
+
+## Testing strategy
+- Ask for the smallest test that proves the behavior:
+  - unit for pure logic
+  - widget for UI wiring
+  - integration for multi-screen flows
+
+## Related skills
+- [Definition of done](./definition_of_done.md)
+- [Architecture review checklist](./architecture_review_checklist.md)
+- [Testing hub](../testing/SKILL.md)

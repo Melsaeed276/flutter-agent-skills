@@ -1,22 +1,57 @@
-# Testing State
+# Skill: Testing State (Deterministic Transitions)
 
-## What to test
+## Purpose
+State tests should be deterministic and describe behavior, not implementation.
+This doc provides a strategy for testing state transitions, async flows, and side effects.
 
-- State transitions: given inputs/events, state changes are correct.
-- Error cases and retries.
-- Caching/invalidation behavior.
+## When to use
+- You are adding state management to a feature.
+- Bugs keep returning; you need regression tests.
+- Async flows are complex (retry, refresh, pagination).
 
-## Patterns
+## When NOT to use
+- Do not over-mock; tests become brittle.
+- Do not test widgets to validate pure business logic; unit test it.
 
-- Use fake repositories with deterministic responses.
-- Test time with a controllable clock abstraction.
+## Core concepts
+- **Arrange/Act/Assert**: define inputs and expected states.
+- **Fakes over mocks**: for repositories/clients.
+- **Controlled time**: make async deterministic.
 
-## Pitfalls
+## Recommended patterns
+- Test the state sequence (loading -> data -> error).
+- Use a fake repository with scripted responses.
+- Separate "effects" from state (navigation, toasts).
 
-- Over-mocking: prefer fakes over deep mocks for readability.
+## Minimal example
 
-## See also
+A simple fake repository for deterministic tests:
 
-- Unit tests: ../../testing/unit_tests.md
-- Mocking: ../../testing/mocking.md
+```dart
+class FakeProfileRepo {
+  String? name;
+  Object? error;
 
+  Future<String> fetchName() async {
+    if (error != null) throw error!;
+    return name ?? 'Anonymous';
+  }
+}
+```
+
+## Edge cases
+- Concurrency: ensure stale results do not overwrite new ones.
+- Retries: ensure retry uses the same inputs and resets error state.
+
+## Common mistakes
+- Asserting internal private fields instead of public outputs.
+- Writing one giant test that covers too many cases.
+
+## Testing strategy
+- Unit test state/controller objects.
+- Widget test the rendering of each state.
+
+## Related skills
+- [Unit tests](../../testing/unit_tests.md)
+- [Widget tests](../../testing/widget_tests.md)
+- [BLoC testing](../bloc/testing.md)
